@@ -1,0 +1,20 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t shaharkeren/client-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true shaharkeren/client-test npm test
+
+after_success:
+  - docker build -t shaharkeren/multi-client ./client
+  - docker build -t shaharkeren/multi-nginx ./nginx
+  - docker build -t shaharkeren/multi-server ./server
+  - docker build -t shaharkeren/multi-worker ./worker
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  - docker push shaharkeren/multi-client
+  - docker push shaharkeren/multi-nginx
+  - docker push shaharkeren/multi-server
+  - docker push shaharkeren/multi-worker
