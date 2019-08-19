@@ -3,3 +3,4 @@ awskeys
 client/package-lock.json
 server/node_modules/
 worker/node_modules/
+service-account.json
